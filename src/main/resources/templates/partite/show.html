@@ -1,0 +1,94 @@
+<!-- PARTITA SINGOLA -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dettaglio Partita</title>
+</head>
+
+<body>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/tornei">Tornei</a>
+        <a href="/squadre">Squadre</a>
+        <span th:if="${userDetails != null}">
+			<form th:action="@{/logout}" method="POST" style="display: inline;">
+						    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+						    <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer; font: inherit; padding: 0;">Logout</button>
+						</form>  <!-- Gli metto a disposizione un pulsante logout, con URL "/logout" -->
+			Ciao <span th:text="${userDetails.username}"></span>
+        </span>
+        <span th:unless="${userDetails != null}">
+            <a href="/login">Login</a>
+            <a href="/register">Registrati</a>
+        </span>
+    </nav>
+
+    <h1>
+        <span th:text="${partita.squadraCasa.nome}">Squadra Casa</span>
+        vs
+        <span th:text="${partita.squadraOspite.nome}">Squadra Ospite</span>
+    </h1>
+
+    <p>Torneo: <a th:href="@{'/tornei/' + ${partita.torneo.id}}" th:text="${partita.torneo.nome}">Nome Torneo</a></p>
+    <p>Data e ora: <span th:text="${partita.dataOra}">2026-01-01T15:00</span></p>
+    <p>Luogo: <span th:text="${partita.luogo}">Stadio</span></p>
+    <p>Arbitro: <span th:text="${partita.arbitro.nome} + ' ' + ${partita.arbitro.cognome}">Nome Arbitro</span></p>
+
+    <div th:if="${partita.stato.name() == 'PLAYED'}">
+        <h2>Risultato</h2>
+        <p>
+            <span th:text="${partita.squadraCasa.nome}">Casa</span>
+            <span th:text="${partita.goalsHome}">0</span>
+            -
+            <span th:text="${partita.goalsAway}">0</span>
+            <span th:text="${partita.squadraOspite.nome}">Ospite</span>
+        </p>
+    </div>
+    <div th:unless="${partita.stato.name() == 'PLAYED'}">
+        <p><em>Partita ancora da giocare</em></p>
+    </div>
+
+    <!-- ======================== -->
+    <!-- SEZIONE COMMENTI        -->
+    <!-- ======================== -->
+    <h2>Commenti</h2>
+
+    <!-- Lista commenti esistenti — visibile a tutti -->
+    <div th:if="${#lists.isEmpty(commentiPartita)}">
+        <p>Nessun commento per questa partita.</p>
+    </div>
+
+    <ul>
+        <li th:each="commento : ${commentiPartita}">
+            <strong th:text="${commento.credentials.username}">utente</strong>
+            <em th:text="${commento.dataCreazione}">data</em>
+            <p th:text="${commento.testo}">testo del commento</p>
+
+            <!-- Pulsante modifica — visibile solo se il commento è dell'utente loggato -->
+            <a th:if="${userDetails != null and commento.credentials.username == userDetails.username}"
+               th:href="@{'/commenti/' + ${commento.id} + '/edit'}">
+                Modifica
+            </a>
+        </li>
+    </ul>
+
+    <!-- Form inserimento nuovo commento — solo per utenti loggati -->
+    <div th:if="${userDetails != null}">
+        <h3>Lascia un commento</h3>
+        <form th:action="@{'/partite/' + ${partita.id} + '/commenti'}" method="POST">
+            <textarea name="testo" rows="4" cols="50" placeholder="Scrivi il tuo commento..."></textarea>
+            <br>
+            <button type="submit">Invia commento</button>
+        </form>
+    </div>
+    <div th:unless="${userDetails != null}">
+        <p><a href="/login">Accedi</a> per lasciare un commento.</p>
+    </div>
+
+    <a th:href="@{'/tornei/' + ${partita.torneo.id}}">← Torna al torneo</a>
+
+</body>
+</html>

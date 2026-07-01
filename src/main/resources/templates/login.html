@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/tornei">Tornei</a>
+        <a href="/squadre">Squadre</a>
+        <span th:unless="${userDetails != null}">
+            <a href="/login">Login</a>
+            <a href="/register">Registrati</a>
+        </span>
+    </nav>
+
+    <h1>Accedi</h1>
+
+    <!-- Messaggio di errore se login fallito -->
+    <div th:if="${param.error}">
+        <p style="color:red">Username o password errati.</p>
+    </div>
+
+	<form action="/login" method="POST">
+	    <!-- Aggiunge il token CSRF automaticamente — obbligatorio con Spring Security -->
+	    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+	    
+	    <label for="username">Username:</label><br>
+	    <input type="text" id="username" name="username" required><br><br>
+
+	    <label for="password">Password:</label><br>
+	    <input type="password" id="password" name="password" required><br><br>
+
+	    <button type="submit">Accedi</button>
+	</form>
+
+    <p>Non hai un account? <a href="/register">Registrati</a></p>
+
+</body>
+</html>

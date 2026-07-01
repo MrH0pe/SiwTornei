@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrati</title>
+</head>
+<body>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/tornei">Tornei</a>
+        <a href="/squadre">Squadre</a>
+        <span th:unless="${userDetails != null}">
+            <a href="/login">Login</a>
+            <a href="/register">Registrati</a>
+        </span>
+    </nav>
+
+    <h1>Registrati</h1>
+
+    <div th:if="${erroreUsername != null}">
+        <p style="color:red; font-weight: bold;" th:text="${erroreUsername}"></p>
+    </div>
+
+    <div th:if="${erroreEmail != null}">
+        <p style="color:red; font-weight: bold;" th:text="${erroreEmail}"></p>
+    </div>
+
+    <form action="/register" method="POST">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <label for="nome">Nome:</label><br>
+        <input type="text" id="nome" name="nome" th:value="${nomeInserito}" required><br><br>
+
+        <label for="cognome">Cognome:</label><br>
+        <input type="text" id="cognome" name="cognome" th:value="${cognomeInserito}" required><br><br>
+
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" th:value="${emailInserita}" required><br><br>
+
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" th:value="${usernameInserito}" required><br><br>
+
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <button type="submit">Registrati</button>
+    </form>
+
+    <p>Hai già un account? <a href="/login">Accedi</a></p>
+
+</body>
+</html>

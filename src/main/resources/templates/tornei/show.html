@@ -1,0 +1,73 @@
+<!-- TORNEO SINGOLO -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <!-- Titolo del HTML -->
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${torneo.nome}">Dettaglio Torneo</title>
+</head>
+
+<body>
+
+    <nav>
+        <a href="/">Home</a> <!-- Pulsante Home -->
+        <a href="/tornei">Tornei</a> <!-- Pulsante Tornei -->
+        <a href="/squadre">Squadre</a> <!-- Pulsante -->
+        <span th:if="${userDetails != null}"> <!-- Utente loggato -->
+			<form th:action="@{/logout}" method="POST" style="display: inline;">
+						    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+						    <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer; font: inherit; padding: 0;">Logout</button>
+						</form>  <!-- Gli metto a disposizione un pulsante logout, con URL "/logout" -->
+			Ciao <span th:text="${userDetails.username}"></span>
+        </span>
+        <span th:unless="${userDetails != null}"> <!-- Se l'utente non è loggato -->
+            <a href="/login">Login</a>
+            <a href="/register">Registrati</a>
+        </span>
+    </nav>
+
+    <h1 th:text="${torneo.nome}">Nome Torneo</h1> <!-- Titolo -->
+    <p>Anno: <span th:text="${torneo.anno}">2026</span></p> <!-- Stampa sotto l'anno del torneo -->
+    <p>Descrizione: <span th:text="${torneo.descrizione}">Descrizione del torneo</span></p> <!-- Stampa descrizione del torneo -->
+
+    <!-- Qui mostro tutte le squadre che stanno nel torneo! -->
+    <h2>Squadre Partecipanti</h2>
+
+    <!-- Caso lista vuota: nessuna squadra ancora iscritta -->
+    <div th:if="${#lists.isEmpty(torneo.squadre)}">
+        <p>Nessuna squadra iscritta a questo torneo.</p>
+    </div>
+
+    <!-- Ciclo sulle squadre del torneo -->
+    <ul>
+        <li th:each="squadra : ${torneo.squadre}">
+            <a th:href="@{'/squadre/' + ${squadra.id}}" th:text="${squadra.nome} + ' (' + ${squadra.citta} + ')'">
+                Nome Squadra
+            </a>
+        </li>
+    </ul>
+
+    <!-- Qui mostro il calendario delle partite del torneo! -->
+    <h2>Calendario Partite</h2>
+
+    <!-- Caso lista vuota: nessuna partita ancora programmata -->
+    <div th:if="${#lists.isEmpty(partite)}">
+        <p>Nessuna partita in programma per questo torneo.</p>
+    </div>
+
+    <!-- Ciclo sulle partite del torneo -->
+    <ul>
+        <li th:each="partita : ${partite}">
+            <a th:href="@{'/partite/' + ${partita.id}}">
+                <span th:text="${partita.dataOra}">2026-01-01T15:00</span> -
+                <span th:text="${partita.squadraCasa.nome}">Casa</span>
+                vs
+                <span th:text="${partita.squadraOspite.nome}">Ospite</span>
+            </a>
+        </li>
+    </ul>
+
+    <a th:href="@{/tornei}">← Torna all'elenco dei Tornei</a> <!-- Pulsante per tornare a tutti i tornei -->
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>  <!-- Dichiaro che è un documento HTML 5  -->
+<html xmlns:th="http://www.thymeleaf.org">   <!-- Dichiaro che gli attributi th: sfruttano Thymeleaf  -->
+<head> <!-- Titolo Index , non viene stampato -->
+    <meta charset="UTF-8">  <!-- Accenti -->
+    <title>Tornei di Calcio Amatoriale</title>
+</head>
+
+<body>  <!-- Contenuto visibile all'utente -->
+
+    <!-- Barra di navigazione -->
+    <nav>
+        <a href="/">Home</a>   <!-- Se io premo il pulsante Home, mi porta all'Url "/" -->
+        <a href="/tornei">Tornei</a> <!-- Se io premo il pulsante Tornei, mi porta all'Url "/tornei" -->
+		<a href="/squadre">Squadre</a> <!-- Se io premo il pulsante Squadre, mi porta all'Url "/squadre" -->
+
+        <!-- Mostra Logout se loggato, Login se anonimo -->
+        <span th:if="${userDetails != null}"> <!-- Quindi se l'utente è loggato' -->
+			<form th:action="@{/logout}" method="POST" style="display: inline;">
+			    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+			    <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer; font: inherit; padding: 0;">Logout</button>
+			</form>  <!-- Gli metto a disposizione un pulsante logout, con URL "/logout" -->
+			Ciao <span th:text="${userDetails.username}"></span> <!-- Allora gli do il benvenuto --> <!-- userDetails.username viene sostituito con l'username dell'utente registrato -->
+        </span>
+        <span th:unless="${userDetails != null}"> <!-- unless è l'opposto di if, mostra il blocco solo se userDetails è null, ossia non loggato -->
+            <a href="/login">Login</a> <!-- Metti a disposizione il pulsante login -->
+            <a href="/register">Registrati</a> <!-- Metti a disposizione il pulsante Registrati -->
+        </span>
+    </nav>
+
+    <!-- Contenuto pagina -->
+    <h1>Benvenuto nei Tornei di Calcio Amatoriale</h1> <!-- Titolo -->
+    <p>Visualizza i tornei disponibili e le partite in programma.</p> <!-- Paragrafo -->
+
+</body>
+</html>

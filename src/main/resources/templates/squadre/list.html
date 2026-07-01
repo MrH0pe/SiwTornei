@@ -1,0 +1,45 @@
+<!-- LISTA SQUADRE -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	
+<head>
+    <meta charset="UTF-8">
+    <title>Elenco Squadre</title>   
+</head>
+
+<body>
+
+    <nav>
+        <a href="/">Home</a> <!-- Pulsante HOME -->
+		<a href="/tornei">Tornei</a> <!-- Pulsante Tornei -->
+        <a href="/squadre">Squadre</a> <!-- Pulsante Squadre -->
+        <span th:if="${userDetails != null}"> <!-- Se sono Loggato -->
+			<form th:action="@{/logout}" method="POST" style="display: inline;">
+						    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+						    <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer; font: inherit; padding: 0;">Logout</button>
+						</form>  <!-- Gli metto a disposizione un pulsante logout, con URL "/logout" -->
+			Ciao <span th:text="${userDetails.username}"></span>
+        </span>
+        <span th:unless="${userDetails != null}"> <!-- Se non sono Loggato -->
+            <a href="/login">Login</a> <!-- Pulsante Login -->
+            <a href="/register">Registrati</a> <!-- Pulsante Logout -->
+        </span>
+    </nav>
+
+    <h1>Elenco Squadre</h1> <!-- Titolo in grassetto -->
+	<!-- #lists offre operazioni comuni sulle liste grazie a Thymeleaf -->
+    <div th:if="${#lists.isEmpty(listaSquadre)}">   <!-- Se non c'è nessuna partita nel db -->  
+        <p>Nessuna partita disponibile al momento.</p>  <!-- allora scrivi questo -->
+    </div> 
+	<!-- Altrimenti, ce c'è almeno un torneo, me lo stampi -->
+    <ul> <!-- Ciclo che mostra tutti i tornei -->
+        <li th:each="squadra : ${listaSquadre}"> <!-- "listaTornei è la lista che gli passo dal Service" -->
+			<a th:href="@{'/squadre/' + ${squadra.id}}" 
+			   th:text="${squadra.nome} + ' (' + ${squadra.citta} + ', ' + ${squadra.annoDiFondazione} + ')'">
+			    Nome Squadra
+			</a>
+        </li>
+    </ul>
+
+</body>
+</html>

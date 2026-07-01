@@ -1,0 +1,54 @@
+<!-- SQUADRA SINGOLA -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	
+<head>
+    <meta charset="UTF-8"> 
+    <title th:text="${squadra.nome}">Dettaglio Squadra</title>
+</head>
+
+<body>
+
+    <nav>
+        <a href="/">Home</a> <!-- Pulsante -->
+		<a href="/tornei">Tornei</a> <!-- Se io premo il pulsante Tornei, mi porta all'Url "/tornei" -->
+        <a href="/squadre">Squadre</a> <!-- Pulsante -->
+        <span th:if="${userDetails != null}"> <!-- Se loggato -->
+			<form th:action="@{/logout}" method="POST" style="display: inline;">
+						    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+						    <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer; font: inherit; padding: 0;">Logout</button>
+						</form>  <!-- Gli metto a disposizione un pulsante logout, con URL "/logout" -->
+			Ciao <span th:text="${userDetails.username}"></span>
+        </span>
+        <span th:unless="${userDetails != null}"> <!-- Se non loggato -->
+            <a href="/login">Login</a>
+            <a href="/register">Registrati</a>
+        </span>
+    </nav>
+
+    <h1 th:text="${squadra.nome}">Nome Squadra</h1> <!-- Titolo stampato -->
+    <p>Città: <span th:text="${squadra.citta}">Roma</span></p>
+    <p>Anno di fondazione: <span th:text="${squadra.annoDiFondazione}">1985</span></p>
+
+	<!-- Qui devo stampare anche la lista dei giocatori della squadra! -->
+    <h2>Giocatori</h2> 
+
+    <!-- Caso lista vuota: nessun giocatore ancora assegnato -->
+    <div th:if="${#lists.isEmpty(squadra.giocatori)}">
+        <p>Nessun giocatore assegnato a questa squadra.</p>
+    </div>
+
+    <!-- Ciclo sui giocatori della squadra -->
+    <ul>
+        <li th:each="giocatore : ${squadra.giocatori}">
+            <span th:text="${giocatore.nome} + ' ' + ${giocatore.cognome}">Nome Cognome</span>
+            - Ruolo: <span th:text="${giocatore.ruolo}">Ruolo</span>
+            - Altezza: <span th:text="${giocatore.altezza}">180</span> cm
+        </li>
+    </ul>
+
+    <a th:href="@{/tornei}">← Torna ai Tornei</a> <!-- Pulsante -->
+	<a th:href="@{/squadre}">← Torna alle Squadre</a> <!-- Pulsante -->
+
+</body>
+</html>
