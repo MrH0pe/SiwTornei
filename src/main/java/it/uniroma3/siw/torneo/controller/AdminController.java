@@ -30,6 +30,14 @@ import it.uniroma3.siw.torneo.service.PartitaService;
 import it.uniroma3.siw.torneo.service.SquadraService;
 import it.uniroma3.siw.torneo.service.TorneoService;
 
+/*
+I metodi HTTP più comuni sono GET e POST. 
+GET: è usato per ottenere il contenuto della risorsa indicata come URI (ad es. una pagina HTML)
+POST: di norma, è usato per inviare informazioni al server (ad esempio, i dati raccolti da una form).
+ In questo caso l'URI indica quale risorsa dovrà gestire le informazioni inviate, e il body conterrà le informazioni stesse
+ */
+
+
 //Controller per l'ADMIN, ossia la sua interfaccia per poter creare e cancellare qualsiasi tornei, partite ecc.
 
 @Controller
