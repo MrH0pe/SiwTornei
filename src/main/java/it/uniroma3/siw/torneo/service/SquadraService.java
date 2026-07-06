@@ -45,4 +45,6 @@ public class SquadraService {
 	public Squadra findByIdWithGiocatori(Long id) {
 	    return squadraRepository.findByIdWithGiocatori(id).orElse(null);
 	}
+	
+
 }

@@ -22,7 +22,7 @@ public class Arbitro {
 	@Column(unique = true)
 	private String codiceArbitrale;
 
-	public Arbitro() { //Costruttore NoArgs
+	public Arbitro() { 
 	}
 
 	public Long getId() {

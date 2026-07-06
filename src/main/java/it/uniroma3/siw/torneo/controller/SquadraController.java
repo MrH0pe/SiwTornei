@@ -20,6 +20,7 @@ public class SquadraController {
 	
 	@GetMapping("/squadre")
 	public String tutteSquadre(Model model){  //gli passo un Model
+		//this.squadraService.orderByAnno();
 		List<Squadra> listaSquadre = this.squadraService.findAll(); //prendo tutti i tornei con il metodo del Service
 		model.addAttribute("listaSquadre",listaSquadre); //listaTornei lo mando al Controller
 		return "squadre/list";

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin — Arbitri</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand"><a href="/">⚽ SiwTorneo</a></div>
+    <div class="nav-links"><a href="/tornei">Tornei</a><a href="/squadre">Squadre</a></div>
+    <div class="nav-auth">
+        <span th:if="${userDetails != null}">
+            Ciao <strong th:text="${userDetails.username}"></strong>
+            <form th:action="@{/logout}" method="POST" class="logout-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="btn-logout">Logout</button>
+            </form>
+        </span>
+    </div>
+</nav>
+<div class="admin-nav">
+    <span>Admin:</span>
+    <a href="/admin/tornei">Tornei</a>
+    <a href="/admin/squadre">Squadre</a>
+    <a href="/admin/giocatori">Giocatori</a>
+    <a href="/admin/partite">Partite</a>
+    <a href="/admin/arbitri">Arbitri</a>
+</div>
+
+<div class="container">
+    <h1>Gestione Arbitri</h1>
+    <a href="/admin/arbitri/new" class="btn btn-primary">+ Nuovo Arbitro</a>
+
+    <table style="margin-top:20px;">
+        <thead>
+            <tr><th>Nome</th><th>Cognome</th><th>Codice Arbitrale</th><th>Azioni</th></tr>
+        </thead>
+        <tbody>
+            <tr th:each="arbitro : ${listaArbitri}">
+                <td th:text="${arbitro.nome}"></td>
+                <td th:text="${arbitro.cognome}"></td>
+                <td th:text="${arbitro.codiceArbitrale}"></td>
+                <td>
+                    <div class="actions">
+                        <form th:action="@{/admin/arbitri/{id}/delete(id=${arbitro.id})}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            <button type="submit" class="btn-danger"
+                                    onclick="return confirm('Eliminare questo arbitro?')">Elimina</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

@@ -12,6 +12,7 @@ import it.uniroma3.siw.torneo.model.Torneo;
 public interface TorneoRepository extends CrudRepository<Torneo, Long>{
 	boolean existsByNomeAndAnno(String nome, Integer anno);  //Ossia il vincolo che sta nel Model (@Table(uniqueConstraints))
 	
+	//JDBC
 	@Query("SELECT t FROM Torneo t LEFT JOIN FETCH t.squadre WHERE t.id = :id")
 	Optional<Torneo> findByIdWithSquadre(@Param("id") Long id);
 }

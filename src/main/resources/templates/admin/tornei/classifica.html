@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Classifica</title>
+</head>
+<body>
+    <h1>Classifica - <span th:text="${torneo.nome}"></span> <span th:text="${torneo.anno}"></span></h1>
+
+    <table>
+        <tr>
+            <th>Squadra</th>
+            <th>Punti</th>
+        </tr>
+        <tr th:each="entry : ${classifica}">
+            <td th:text="${entry.key.nome}"></td>
+            <td th:text="${entry.value}"></td>
+        </tr>
+    </table>
+
+    <a th:href="@{/tornei/{id}(id=${torneo.id})}">Torna al torneo</a>
+</body>
+</html>

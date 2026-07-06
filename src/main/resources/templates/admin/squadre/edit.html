@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifica Squadra — Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand"><a href="/">⚽ SiwTorneo</a></div>
+    <div class="nav-links"><a href="/tornei">Tornei</a><a href="/squadre">Squadre</a></div>
+</nav>
+<div class="admin-nav">
+    <span>Admin:</span>
+    <a href="/admin/tornei">Tornei</a>
+    <a href="/admin/squadre">Squadre</a>
+    <a href="/admin/giocatori">Giocatori</a>
+    <a href="/admin/partite">Partite</a>
+    <a href="/admin/arbitri">Arbitri</a>
+</div>
+
+<div class="container">
+    <h1>Modifica squadra</h1>
+
+    <div th:if="${squadraEsistente}" class="alert alert-danger" th:text="${squadraEsistente}"></div>
+
+    <form th:action="@{/admin/squadre/{id}/edit(id=${squadra.id})}" th:object="${squadra}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <label>Nome <input type="text" th:field="*{nome}" required/></label>
+        <label>Città <input type="text" th:field="*{citta}" required/></label>
+        <label>Anno di Fondazione <input type="number" th:field="*{annoDiFondazione}" min="1800" max="2030"/></label>
+        <button type="submit" class="mt-16">Salva modifiche</button>
+    </form>
+
+    <a href="/admin/squadre">← Annulla</a>
+</div>
+
+</body>
+</html>

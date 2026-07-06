@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifica Giocatore — Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand"><a href="/">⚽ SiwTorneo</a></div>
+    <div class="nav-links"><a href="/tornei">Tornei</a><a href="/squadre">Squadre</a></div>
+</nav>
+<div class="admin-nav">
+    <span>Admin:</span>
+    <a href="/admin/tornei">Tornei</a>
+    <a href="/admin/squadre">Squadre</a>
+    <a href="/admin/giocatori">Giocatori</a>
+    <a href="/admin/partite">Partite</a>
+    <a href="/admin/arbitri">Arbitri</a>
+</div>
+
+<div class="container">
+    <h1>Modifica giocatore</h1>
+
+    <form th:action="@{/admin/giocatori/{id}/edit(id=${giocatore.id})}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <label>Nome <input type="text" name="nome" th:value="${giocatore.nome}" required/></label>
+        <label>Cognome <input type="text" name="cognome" th:value="${giocatore.cognome}" required/></label>
+        <label>Data di nascita
+            <input type="date" name="dataDiNascita"
+                   th:value="${#temporals.format(giocatore.dataDiNascita, 'yyyy-MM-dd')}" required/>
+        </label>
+        <label>Ruolo <input type="text" name="ruolo" th:value="${giocatore.ruolo}" required/></label>
+        <label>Altezza (cm) <input type="number" name="altezza" th:value="${giocatore.altezza}" min="100" max="250"/></label>
+        <label>Squadra
+            <select name="squadraId">
+                <option value="">-- Nessuna --</option>
+                <option th:each="s : ${listaSquadre}"
+                        th:value="${s.id}"
+                        th:text="${s.nome} + ' — ' + ${s.citta}"
+                        th:selected="${giocatore.squadra != null and giocatore.squadra.id == s.id}"></option>
+            </select>
+        </label>
+        <button type="submit" class="mt-16">Salva modifiche</button>
+    </form>
+
+    <a href="/admin/giocatori">← Annulla</a>
+</div>
+
+</body>
+</html>

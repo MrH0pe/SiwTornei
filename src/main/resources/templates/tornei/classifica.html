@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Tornei di Calcio Amatoriale</title>
+    <title th:text="'Classifica — ' + ${torneo.nome}">Classifica</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
@@ -32,13 +32,31 @@
 </nav>
 
 <div class="container">
-    <div class="hero">
-        <h1>Benvenuto nei Tornei di Calcio Amatoriale</h1>
-        <p>Segui i tuoi tornei preferiti, le partite e la classifica in tempo reale.</p>
-        <div class="hero-links">
-            <a href="/tornei" class="btn btn-primary">Vedi i Tornei</a>
-            <a href="/squadre" class="btn btn-success">Vedi le Squadre</a>
-        </div>
+    <h1>Classifica — <span th:text="${torneo.nome}"></span> <span th:text="${torneo.anno}"></span></h1>
+
+    <div th:if="${classifica.isEmpty()}" class="alert alert-info">
+        Nessun dato disponibile per la classifica.
+    </div>
+
+    <table class="classifica-table" th:unless="${classifica.isEmpty()}">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Squadra</th>
+                <th>Punti</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="entry, stat : ${classifica}">
+                <td th:text="${stat.count}"></td>
+                <td th:text="${entry.key.nome}"></td>
+                <td><strong th:text="${entry.value}"></strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="back-links">
+        <a th:href="@{'/tornei/' + ${torneo.id}}">← Torna al torneo</a>
     </div>
 </div>
 

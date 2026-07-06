@@ -13,6 +13,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -28,9 +30,10 @@ public class Partita {
 	@NotBlank
 	private String luogo;
 
-	@NotNull
+	@Min(0) @Max(10)
 	private Integer goalsHome;
-	@NotNull
+
+	@Min(0) @Max(10)
 	private Integer goalsAway;
 	@NotNull
 	private StatoPartita stato;

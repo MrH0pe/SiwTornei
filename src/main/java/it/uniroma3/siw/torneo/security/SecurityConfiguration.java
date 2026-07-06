@@ -36,7 +36,7 @@ public class SecurityConfiguration {
         this.dataSource = dataSource;
     }
     // Dove sono le credenziali nel DB e come leggerle
-    @Bean
+    @Bean  //esegui questo metodo all'avvio, prendi l'oggetto che restituisce, e mettilo nel tuo contenitore
     public UserDetailsService userDetailsService() {
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
         // Query per recuperare username e password dall'Entity Credentials
@@ -61,9 +61,14 @@ public class SecurityConfiguration {
         	authorize.requestMatchers(HttpMethod.GET,
         		    "/", "/index", "/login", "/register", "/error",
         		    "/tornei/**", "/squadre/**", "/partite/**",
-        		    "/css/**", "/images/**", "/favicon.ico").permitAll();
+        		    "/api/**",
+        		    "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll();
         	authorize.requestMatchers(HttpMethod.POST, "/partite/*/commenti")
-            .hasAnyAuthority(Credentials.DEFAULT_ROLE, Credentials.ADMIN_ROLE);
+                .hasAnyAuthority(Credentials.DEFAULT_ROLE, Credentials.ADMIN_ROLE);
+            authorize.requestMatchers(HttpMethod.POST, "/api/partite/*/commenti")
+                .hasAnyAuthority(Credentials.DEFAULT_ROLE, Credentials.ADMIN_ROLE);
+            authorize.requestMatchers(HttpMethod.DELETE, "/api/commenti/*")
+                .authenticated();
             authorize.requestMatchers(HttpMethod.POST,
                 "/register", "/login").permitAll();
             authorize.requestMatchers(HttpMethod.GET, "/admin/**")

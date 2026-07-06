@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin — Giocatori</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand"><a href="/">⚽ SiwTorneo</a></div>
+    <div class="nav-links"><a href="/tornei">Tornei</a><a href="/squadre">Squadre</a></div>
+    <div class="nav-auth">
+        <span th:if="${userDetails != null}">
+            Ciao <strong th:text="${userDetails.username}"></strong>
+            <form th:action="@{/logout}" method="POST" class="logout-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="btn-logout">Logout</button>
+            </form>
+        </span>
+    </div>
+</nav>
+<div class="admin-nav">
+    <span>Admin:</span>
+    <a href="/admin/tornei">Tornei</a>
+    <a href="/admin/squadre">Squadre</a>
+    <a href="/admin/giocatori">Giocatori</a>
+    <a href="/admin/partite">Partite</a>
+    <a href="/admin/arbitri">Arbitri</a>
+</div>
+
+<div class="container">
+    <h1>Gestione Giocatori</h1>
+    <a href="/admin/giocatori/new" class="btn btn-primary">+ Nuovo Giocatore</a>
+
+    <table style="margin-top:20px;">
+        <thead>
+            <tr><th>Nome</th><th>Cognome</th><th>Data nascita</th><th>Ruolo</th><th>Squadra</th><th>Azioni</th></tr>
+        </thead>
+        <tbody>
+            <tr th:each="giocatore : ${listaGiocatori}">
+                <td th:text="${giocatore.nome}"></td>
+                <td th:text="${giocatore.cognome}"></td>
+                <td th:text="${giocatore.dataDiNascita}"></td>
+                <td th:text="${giocatore.ruolo}"></td>
+                <td th:text="${giocatore.squadra != null ? giocatore.squadra.nome : '—'}"></td>
+                <td>
+                    <div class="actions">
+                        <a th:href="@{/admin/giocatori/{id}/edit(id=${giocatore.id})}" class="btn btn-primary">Modifica</a>
+                        <form th:action="@{/admin/giocatori/{id}/delete(id=${giocatore.id})}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            <button type="submit" class="btn-danger"
+                                    onclick="return confirm('Eliminare questo giocatore?')">Elimina</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

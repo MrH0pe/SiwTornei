@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifica Partita — Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand"><a href="/">⚽ SiwTorneo</a></div>
+    <div class="nav-links"><a href="/tornei">Tornei</a><a href="/squadre">Squadre</a></div>
+</nav>
+<div class="admin-nav">
+    <span>Admin:</span>
+    <a href="/admin/tornei">Tornei</a>
+    <a href="/admin/squadre">Squadre</a>
+    <a href="/admin/giocatori">Giocatori</a>
+    <a href="/admin/partite">Partite</a>
+    <a href="/admin/arbitri">Arbitri</a>
+</div>
+
+<div class="container">
+    <h1>Modifica partita</h1>
+
+    <form th:action="@{/admin/partite/{id}/edit(id=${partita.id})}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <label>Data e ora
+            <input type="datetime-local" name="dataOra" required
+                   th:value="${#temporals.format(partita.dataOra, 'yyyy-MM-dd') + 'T' + #temporals.format(partita.dataOra, 'HH:mm')}"/>
+        </label>
+        <label>Luogo <input type="text" name="luogo" th:value="${partita.luogo}" required/></label>
+
+        <label>Torneo
+            <select name="torneoId">
+                <option th:each="t : ${listaTornei}"
+                        th:value="${t.id}"
+                        th:text="${t.nome} + ' ' + ${t.anno}"
+                        th:selected="${partita.torneo != null and partita.torneo.id == t.id}"></option>
+            </select>
+        </label>
+
+        <label>Squadra casa
+            <select name="squadraCasaId">
+                <option th:each="s : ${listaSquadre}"
+                        th:value="${s.id}"
+                        th:text="${s.nome}"
+                        th:selected="${partita.squadraCasa != null and partita.squadraCasa.id == s.id}"></option>
+            </select>
+        </label>
+
+        <label>Squadra ospite
+            <select name="squadraOspiteId">
+                <option th:each="s : ${listaSquadre}"
+                        th:value="${s.id}"
+                        th:text="${s.nome}"
+                        th:selected="${partita.squadraOspite != null and partita.squadraOspite.id == s.id}"></option>
+            </select>
+        </label>
+
+        <label>Arbitro
+            <select name="arbitroId">
+                <option th:each="a : ${listaArbitri}"
+                        th:value="${a.id}"
+                        th:text="${a.nome} + ' ' + ${a.cognome} + ' (' + ${a.codiceArbitrale} + ')'"
+                        th:selected="${partita.arbitro != null and partita.arbitro.id == a.id}"></option>
+            </select>
+        </label>
+
+        <label>Stato
+            <select name="stato">
+                <option value="SCHEDULED" th:selected="${partita.stato != null and partita.stato.name() == 'SCHEDULED'}">Programmata</option>
+                <option value="PLAYED" th:selected="${partita.stato != null and partita.stato.name() == 'PLAYED'}">Giocata</option>
+            </select>
+        </label>
+
+        <button type="submit" class="mt-16">Salva modifiche</button>
+    </form>
+
+    <a href="/admin/partite">← Annulla</a>
+</div>
+
+</body>
+</html>

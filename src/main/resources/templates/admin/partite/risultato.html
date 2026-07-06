@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inserisci Risultato — Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand"><a href="/">⚽ SiwTorneo</a></div>
+    <div class="nav-links"><a href="/tornei">Tornei</a><a href="/squadre">Squadre</a></div>
+</nav>
+<div class="admin-nav">
+    <span>Admin:</span>
+    <a href="/admin/tornei">Tornei</a>
+    <a href="/admin/squadre">Squadre</a>
+    <a href="/admin/giocatori">Giocatori</a>
+    <a href="/admin/partite">Partite</a>
+    <a href="/admin/arbitri">Arbitri</a>
+</div>
+
+<div class="container">
+    <h1>Inserisci risultato</h1>
+
+    <div class="card" style="max-width:400px; margin-bottom:24px;">
+        <p style="font-size:1.1rem; font-weight:600; text-align:center;"
+           th:text="${partita.squadraCasa.nome} + ' vs ' + ${partita.squadraOspite.nome}"></p>
+    </div>
+
+    <form th:action="@{/admin/partite/{id}/risultato(id=${partita.id})}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <label>Goal <span th:text="${partita.squadraCasa.nome}">Casa</span>
+            <input type="number" name="goalsHome" min="0" max="10" value="0" required/>
+        </label>
+        <label>Goal <span th:text="${partita.squadraOspite.nome}">Ospite</span>
+            <input type="number" name="goalsAway" min="0" max="10" value="0" required/>
+        </label>
+        <button type="submit" class="mt-16">Salva risultato</button>
+    </form>
+
+    <a href="/admin/partite">← Annulla</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuova Partita — Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand"><a href="/">⚽ SiwTorneo</a></div>
+    <div class="nav-links"><a href="/tornei">Tornei</a><a href="/squadre">Squadre</a></div>
+</nav>
+<div class="admin-nav">
+    <span>Admin:</span>
+    <a href="/admin/tornei">Tornei</a>
+    <a href="/admin/squadre">Squadre</a>
+    <a href="/admin/giocatori">Giocatori</a>
+    <a href="/admin/partite">Partite</a>
+    <a href="/admin/arbitri">Arbitri</a>
+</div>
+
+<div class="container">
+    <h1>Crea nuova partita</h1>
+
+    <form th:action="@{/admin/partite/new}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <label>Data e ora <input type="datetime-local" name="dataOra" required/></label>
+        <label>Luogo <input type="text" name="luogo" required/></label>
+
+        <label>Torneo
+            <select name="torneoId" id="torneoSelect">
+                <option th:each="t : ${listaTornei}"
+                        th:value="${t.id}"
+                        th:text="${t.nome} + ' ' + ${t.anno}"></option>
+            </select>
+        </label>
+
+        <label>Squadra casa
+            <select name="squadraCasaId" id="squadraCasaSelect">
+                <option value="">— seleziona torneo prima —</option>
+            </select>
+        </label>
+
+        <label>Squadra ospite
+            <select name="squadraOspiteId" id="squadraOspiteSelect">
+                <option value="">— seleziona torneo prima —</option>
+            </select>
+        </label>
+
+        <label>Arbitro
+            <select name="arbitroId">
+                <option th:each="a : ${listaArbitri}"
+                        th:value="${a.id}"
+                        th:text="${a.nome} + ' ' + ${a.cognome} + ' (' + ${a.codiceArbitrale} + ')'"></option>
+            </select>
+        </label>
+
+        <label>Stato
+            <select name="stato">
+                <option value="SCHEDULED">Programmata</option>
+                <option value="PLAYED">Giocata</option>
+            </select>
+        </label>
+
+        <button type="submit" class="mt-16">Salva</button>
+    </form>
+
+    <a href="/admin/partite">← Annulla</a>
+</div>
+
+<script>
+    function aggiornaSquadre(torneoId) {
+        if (!torneoId) return;
+        fetch('/api/tornei/' + torneoId + '/squadre')
+            .then(r => r.json())
+            .then(squadre => {
+                const casaSelect = document.getElementById('squadraCasaSelect');
+                const ospiteSelect = document.getElementById('squadraOspiteSelect');
+                casaSelect.innerHTML = '';
+                ospiteSelect.innerHTML = '';
+                if (squadre.length === 0) {
+                    const opt = '<option value="">Nessuna squadra nel torneo</option>';
+                    casaSelect.innerHTML = opt;
+                    ospiteSelect.innerHTML = opt;
+                    return;
+                }
+                squadre.forEach(s => {
+                    const opt = `<option value="${s.id}">${s.nome}</option>`;
+                    casaSelect.innerHTML += opt;
+                    ospiteSelect.innerHTML += opt;
+                });
+            });
+    }
+
+    const torneoSelect = document.getElementById('torneoSelect');
+    torneoSelect.addEventListener('change', () => aggiornaSquadre(torneoSelect.value));
+    // Carica le squadre del torneo selezionato di default
+    if (torneoSelect.value) aggiornaSquadre(torneoSelect.value);
+</script>
+
+</body>
+</html>

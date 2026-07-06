@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"nome", "cognome", "dataDiNascita"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"nome", "cognome", "data_di_nascita"}))
 public class Giocatore {
 
 	@Id
