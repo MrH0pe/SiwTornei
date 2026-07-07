@@ -35,10 +35,11 @@ import org.springframework.web.bind.annotation.GetMapping;
    nella classe Order@ManyToOneprivate Customer customer;
    nella classe Customer@OneToMany(mappedBy = "customer")private List<Order> orders;
 
- * @OneToMany -> EAGER
- * @OneToMany -> EAGER
- * @ManyToOne -> LAZY
+ * DEFAULT DI FETCH IN JPA:
+ * @OneToMany -> LAZY
  * @ManyToMany -> LAZY
+ * @ManyToOne -> EAGER
+ * @OneToOne -> EAGER
  * 
  * Vincoli di unicità @Column(unique=true, nullable = false) , @Table(uniqueConstraints=@UniqueConstraint(columnNames={"firstname","lastname"}))
 *

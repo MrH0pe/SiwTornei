@@ -23,6 +23,8 @@
 <div class="container">
     <h1>Crea nuovo giocatore</h1>
 
+    <div th:if="${erroreForm}" class="alert alert-danger" th:text="${erroreForm}"></div>
+
     <form th:action="@{/admin/giocatori/new}" method="post">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <label>Nome <input type="text" name="nome" required/></label>

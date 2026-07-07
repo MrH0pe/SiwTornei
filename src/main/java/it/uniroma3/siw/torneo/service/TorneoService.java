@@ -5,15 +5,19 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.uniroma3.siw.torneo.model.Squadra;
 import it.uniroma3.siw.torneo.model.Torneo;
+import it.uniroma3.siw.torneo.repository.SquadraRepository;
 import it.uniroma3.siw.torneo.repository.TorneoRepository;
 
 @Service
 public class TorneoService {
 	private TorneoRepository torneoRepository;
+	private SquadraRepository squadraRepository;
 
-	public TorneoService(TorneoRepository torneoRepository) {
+	public TorneoService(TorneoRepository torneoRepository, SquadraRepository squadraRepository) {
 		this.torneoRepository = torneoRepository;
+		this.squadraRepository = squadraRepository;
 	}
 
 	@Transactional(readOnly = true)
@@ -44,5 +48,31 @@ public class TorneoService {
 	@Transactional(readOnly = true)
 	public Torneo findByIdWithSquadre(Long id) {
 	    return torneoRepository.findByIdWithSquadre(id).orElse(null);
+	}
+
+	/*
+	 * Caso d'uso che coordina due repository (Torneo e Squadra) in una sola transazione.
+	 * Le entità caricate sono "managed": la modifica alla lista squadre viene
+	 * sincronizzata sul DB automaticamente al commit, senza chiamare save().
+	 */
+	@Transactional
+	public boolean aggiungiSquadraATorneo(Long torneoId, Long squadraId) {
+		Torneo torneo = torneoRepository.findByIdWithSquadre(torneoId).orElse(null);
+		Squadra squadra = squadraRepository.findById(squadraId).orElse(null);
+		if (torneo == null || squadra == null)
+			return false;
+		if (!torneo.getSquadre().contains(squadra))
+			torneo.getSquadre().add(squadra);
+		return true;
+	}
+
+	@Transactional
+	public boolean rimuoviSquadraDaTorneo(Long torneoId, Long squadraId) {
+		Torneo torneo = torneoRepository.findByIdWithSquadre(torneoId).orElse(null);
+		Squadra squadra = squadraRepository.findById(squadraId).orElse(null);
+		if (torneo == null || squadra == null)
+			return false;
+		torneo.getSquadre().remove(squadra);
+		return true;
 	}
 }

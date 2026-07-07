@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,6 +38,7 @@ public class Partita {
 	@Min(0) @Max(10)
 	private Integer goalsAway;
 	@NotNull
+	@Enumerated(EnumType.STRING) //Salva "SCHEDULED"/"PLAYED" invece dell'ordinale: robusto se l'enum cambia ordine
 	private StatoPartita stato;
 
 	public Partita() { //Costruttore NoArgs

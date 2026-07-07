@@ -39,7 +39,8 @@ public class TorneoController {
 	    if (torneo == null) {
 	        return "redirect:/tornei";
 	    }
-	    List<Partita> partite = this.partitaService.findAllByTorneo(torneo);
+	    //JOIN FETCH per evitare il problema N+1 sulle associazioni di ogni partita
+	    List<Partita> partite = this.partitaService.findAllByTorneoWithRelazioni(torneo);
 
 	    model.addAttribute("torneo", torneo);
 	    model.addAttribute("partite", partite);

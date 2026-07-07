@@ -24,7 +24,8 @@ public class ClassificaService {
 		this.partitaService = partitaService;
 	}
 	
-	@Transactional
+	//Sola lettura: readOnly=true evita il dirty checking di Hibernate e segnala al driver che non ci saranno scritture
+	@Transactional(readOnly = true)
 	public Map<Squadra, Integer> classificaTorneo(Torneo torneo) {
 	    Map<Squadra, Integer> classifica = new HashMap<>();
 
@@ -34,7 +35,8 @@ public class ClassificaService {
 	        classifica.put(squadra, 0);
 	    }
 
-	    List<Partita> partite = partitaService.findAllByTorneo(torneo);
+	    //JOIN FETCH: squadre e associazioni caricate in un'unica query invece di N+1
+	    List<Partita> partite = partitaService.findAllByTorneoWithRelazioni(torneo);
 	    for (Partita partita : partite) {
 	        if (partita.getStato() == StatoPartita.PLAYED) {
 	            Squadra casa = partita.getSquadraCasa();

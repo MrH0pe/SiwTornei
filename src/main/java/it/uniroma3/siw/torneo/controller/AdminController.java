@@ -2,6 +2,7 @@ package it.uniroma3.siw.torneo.controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,12 +12,15 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import jakarta.validation.Valid;
 
 import it.uniroma3.siw.torneo.model.Arbitro;
 import it.uniroma3.siw.torneo.model.Giocatore;
@@ -67,7 +71,11 @@ public class AdminController {
 	}
 
 	@PostMapping("/admin/squadre/new")
-	public String aggiungiSquadra(@ModelAttribute Squadra squadra, Model model) {
+	public String aggiungiSquadra(@Valid @ModelAttribute("nuovaSquadra") Squadra squadra,
+	                              BindingResult bindingResult, Model model) {
+		if (bindingResult.hasErrors()) {
+			return "admin/squadre/new";
+		}
 		if (this.squadraService.existsByNomeAndCitta(squadra.getNome(), squadra.getCitta())) {
 			model.addAttribute("squadraEsistente", "Questa squadra esiste già!");
 			return "admin/squadre/new";
@@ -91,9 +99,15 @@ public class AdminController {
 	}
 
 	@PostMapping("/admin/squadre/{id}/edit")
-	public String salvaSquadra(@PathVariable("id") Long id, @ModelAttribute Squadra form, Model model) {
+	public String salvaSquadra(@PathVariable("id") Long id,
+	                           @Valid @ModelAttribute("squadra") Squadra form,
+	                           BindingResult bindingResult, Model model) {
 		Squadra existing = squadraService.findById(id);
 		if (existing == null) return "redirect:/admin/squadre";
+		if (bindingResult.hasErrors()) {
+			form.setId(id);
+			return "admin/squadre/edit";
+		}
 		boolean nomeChanged = !existing.getNome().equals(form.getNome());
 		boolean cittaChanged = !existing.getCitta().equals(form.getCitta());
 		if ((nomeChanged || cittaChanged) && squadraService.existsByNomeAndCitta(form.getNome(), form.getCitta())) {
@@ -125,7 +139,11 @@ public class AdminController {
 	}
 
 	@PostMapping("/admin/tornei/new")
-	public String aggiungiTorneo(@ModelAttribute Torneo torneo, Model model) {
+	public String aggiungiTorneo(@Valid @ModelAttribute("nuovoTorneo") Torneo torneo,
+	                             BindingResult bindingResult, Model model) {
+		if (bindingResult.hasErrors()) {
+			return "admin/tornei/new";
+		}
 		if (this.torneoService.existsByNomeAndAnno(torneo.getNome(), torneo.getAnno())) {
 			model.addAttribute("torneoEsistente", "Questo torneo esiste già!");
 			return "admin/tornei/new";
@@ -149,9 +167,15 @@ public class AdminController {
 	}
 
 	@PostMapping("/admin/tornei/{id}/edit")
-	public String salvaTorneo(@PathVariable("id") Long id, @ModelAttribute Torneo form, Model model) {
+	public String salvaTorneo(@PathVariable("id") Long id,
+	                          @Valid @ModelAttribute("torneo") Torneo form,
+	                          BindingResult bindingResult, Model model) {
 		Torneo existing = torneoService.findById(id);
 		if (existing == null) return "redirect:/admin/tornei";
+		if (bindingResult.hasErrors()) {
+			form.setId(id);
+			return "admin/tornei/edit";
+		}
 		boolean nomeChanged = !existing.getNome().equals(form.getNome());
 		boolean annoChanged = !existing.getAnno().equals(form.getAnno());
 		if ((nomeChanged || annoChanged) && torneoService.existsByNomeAndAnno(form.getNome(), form.getAnno())) {
@@ -189,25 +213,16 @@ public class AdminController {
 		return "admin/tornei/squadre";
 	}
 
+	//La logica (coordinamento dei due repository) sta nel service, in un'unica transazione
 	@PostMapping("/admin/tornei/{id}/squadre/add")
 	public String aggiungiSquadraTorneo(@PathVariable("id") Long id, @RequestParam Long squadraId) {
-		Torneo torneo = torneoService.findByIdWithSquadre(id);
-		Squadra squadra = squadraService.findById(squadraId);
-		if (torneo == null || squadra == null) return "redirect:/admin/tornei";
-		if (!torneo.getSquadre().contains(squadra)) {
-			torneo.getSquadre().add(squadra);
-			torneoService.save(torneo);
-		}
+		if (!torneoService.aggiungiSquadraATorneo(id, squadraId)) return "redirect:/admin/tornei";
 		return "redirect:/admin/tornei/" + id + "/squadre";
 	}
 
 	@PostMapping("/admin/tornei/{id}/squadre/{squadraId}/remove")
 	public String rimuoviSquadraTorneo(@PathVariable("id") Long id, @PathVariable("squadraId") Long squadraId) {
-		Torneo torneo = torneoService.findByIdWithSquadre(id);
-		Squadra squadra = squadraService.findById(squadraId);
-		if (torneo == null || squadra == null) return "redirect:/admin/tornei";
-		torneo.getSquadre().remove(squadra);
-		torneoService.save(torneo);
+		if (!torneoService.rimuoviSquadraDaTorneo(id, squadraId)) return "redirect:/admin/tornei";
 		return "redirect:/admin/tornei/" + id + "/squadre";
 	}
 
@@ -226,13 +241,21 @@ public class AdminController {
 	                                @RequestParam String ruolo,
 	                                @RequestParam Integer altezza,
 	                                @RequestParam String dataDiNascita,
-	                                @RequestParam(required = false) Long squadraId) {
+	                                @RequestParam(required = false) Long squadraId,
+	                                Model model) {
 		Giocatore g = new Giocatore();
 		g.setNome(nome);
 		g.setCognome(cognome);
 		g.setRuolo(ruolo);
 		g.setAltezza(altezza);
-		g.setDataDiNascita(LocalDate.parse(dataDiNascita));
+		try {
+			g.setDataDiNascita(LocalDate.parse(dataDiNascita));
+		} catch (DateTimeParseException e) {
+			model.addAttribute("erroreForm", "Data di nascita non valida.");
+			model.addAttribute("listaSquadre", squadraService.findAll());
+			model.addAttribute("nuovoGiocatore", g);
+			return "admin/giocatori/new";
+		}
 		if (squadraId != null) g.setSquadra(squadraService.findById(squadraId));
 		giocatoreService.save(g);
 		return "redirect:/admin/giocatori";
@@ -267,7 +290,11 @@ public class AdminController {
 		giocatore.setCognome(cognome);
 		giocatore.setRuolo(ruolo);
 		giocatore.setAltezza(altezza);
-		giocatore.setDataDiNascita(LocalDate.parse(dataDiNascita));
+		try {
+			giocatore.setDataDiNascita(LocalDate.parse(dataDiNascita));
+		} catch (DateTimeParseException e) {
+			return "redirect:/admin/giocatori/" + id + "/edit";
+		}
 		giocatore.setSquadra(squadraId != null ? squadraService.findById(squadraId) : null);
 		giocatoreService.save(giocatore);
 		return "redirect:/admin/giocatori";
@@ -296,7 +323,11 @@ public class AdminController {
 	}
 
 	@PostMapping("/admin/arbitri/new")
-	public String aggiungiArbitro(@ModelAttribute Arbitro arbitro, Model model) {
+	public String aggiungiArbitro(@Valid @ModelAttribute("nuovoArbitro") Arbitro arbitro,
+	                              BindingResult bindingResult, Model model) {
+		if (bindingResult.hasErrors()) {
+			return "admin/arbitri/new";
+		}
 		if (arbitroService.existsByCodiceArbitrale(arbitro.getCodiceArbitrale())) {
 			model.addAttribute("arbitroEsistente", "Codice arbitrale già in uso!");
 			return "admin/arbitri/new";
@@ -344,9 +375,20 @@ public class AdminController {
 	                              @RequestParam Long squadraCasaId,
 	                              @RequestParam Long squadraOspiteId,
 	                              @RequestParam Long arbitroId,
-	                              @RequestParam StatoPartita stato) {
+	                              @RequestParam StatoPartita stato,
+	                              Model model) {
 		Partita p = new Partita();
-		p.setDataOra(LocalDateTime.parse(dataOra));
+		try {
+			p.setDataOra(LocalDateTime.parse(dataOra));
+		} catch (DateTimeParseException e) {
+			return erroreFormPartita(model, "Data e ora non valide.");
+		}
+		if (squadraCasaId.equals(squadraOspiteId)) {
+			return erroreFormPartita(model, "La squadra di casa e quella ospite devono essere diverse.");
+		}
+		if (partitaService.existsByLuogoAndDataOra(luogo, p.getDataOra())) {
+			return erroreFormPartita(model, "Esiste già una partita in quel luogo a quell'orario.");
+		}
 		p.setLuogo(luogo);
 		p.setTorneo(torneoService.findById(torneoId));
 		p.setSquadraCasa(squadraService.findById(squadraCasaId));
@@ -357,9 +399,19 @@ public class AdminController {
 		return "redirect:/admin/partite";
 	}
 
+	//Ripopola il form di creazione partita mostrando un messaggio di errore
+	private String erroreFormPartita(Model model, String messaggio) {
+		model.addAttribute("erroreForm", messaggio);
+		model.addAttribute("listaTornei", torneoService.getAllTornei());
+		model.addAttribute("listaSquadre", squadraService.findAll());
+		model.addAttribute("listaArbitri", arbitroService.findAll());
+		return "admin/partite/new";
+	}
+
 	@GetMapping("/admin/partite")
 	public String tuttePartite(Model model) {
-		model.addAttribute("listaPartite", this.partitaService.findAll());
+		//JOIN FETCH: una sola query invece del problema N+1 (una query extra per ogni associazione EAGER)
+		model.addAttribute("listaPartite", this.partitaService.findAllWithRelazioni());
 		return "admin/partite/list";
 	}
 
@@ -385,7 +437,11 @@ public class AdminController {
 	                           @RequestParam StatoPartita stato) {
 		Partita partita = partitaService.findById(id);
 		if (partita == null) return "redirect:/admin/partite";
-		partita.setDataOra(LocalDateTime.parse(dataOra));
+		try {
+			partita.setDataOra(LocalDateTime.parse(dataOra));
+		} catch (DateTimeParseException e) {
+			return "redirect:/admin/partite/" + id + "/edit";
+		}
 		partita.setLuogo(luogo);
 		partita.setTorneo(torneoService.findById(torneoId));
 		partita.setSquadraCasa(squadraService.findById(squadraCasaId));
@@ -417,13 +473,18 @@ public class AdminController {
 	@PostMapping("/admin/partite/{id}/risultato")
 	public String salvaRisultato(@PathVariable("id") Long id,
 	                             @RequestParam Integer goalsHome,
-	                             @RequestParam Integer goalsAway) {
-		Partita partita = this.partitaService.findById(id);
-		if (partita == null) return "redirect:/admin/partite";
-		partita.setGoalsHome(goalsHome);
-		partita.setGoalsAway(goalsAway);
-		partita.setStato(StatoPartita.PLAYED);
-		partitaService.save(partita);
+	                             @RequestParam Integer goalsAway,
+	                             Model model) {
+		//Validazione lato server (il min/max del form HTML è aggirabile)
+		if (goalsHome == null || goalsAway == null || goalsHome < 0 || goalsHome > 10 || goalsAway < 0 || goalsAway > 10) {
+			Partita partita = this.partitaService.findById(id);
+			if (partita == null) return "redirect:/admin/partite";
+			model.addAttribute("erroreForm", "I goal devono essere compresi tra 0 e 10.");
+			model.addAttribute("partita", partita);
+			return "admin/partite/risultato";
+		}
+		//La logica di aggiornamento sta nel service, in una transazione READ_COMMITTED
+		this.partitaService.registraRisultato(id, goalsHome, goalsAway);
 		return "redirect:/admin/partite";
 	}
 }

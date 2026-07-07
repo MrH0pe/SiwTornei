@@ -23,6 +23,8 @@
 <div class="container">
     <h1>Inserisci risultato</h1>
 
+    <div th:if="${erroreForm}" class="alert alert-danger" th:text="${erroreForm}"></div>
+
     <div class="card" style="max-width:400px; margin-bottom:24px;">
         <p style="font-size:1.1rem; font-weight:600; text-align:center;"
            th:text="${partita.squadraCasa.nome} + ' vs ' + ${partita.squadraOspite.nome}"></p>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Errore — SiwTorneo</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand"><a href="/">⚽ SiwTorneo</a></div>
+    <div class="nav-links"><a href="/tornei">Tornei</a><a href="/squadre">Squadre</a></div>
+</nav>
+
+<div class="container">
+    <h1>Ops! Qualcosa è andato storto</h1>
+
+    <div class="alert alert-danger">
+        <p>
+            <strong th:text="${status} ?: 'Errore'">500</strong>
+            — <span th:text="${error} ?: 'Errore interno'">Errore interno</span>
+        </p>
+        <p th:if="${status == 404}">La pagina richiesta non esiste.</p>
+        <p th:if="${status == 403}">Non hai i permessi per accedere a questa risorsa.</p>
+    </div>
+
+    <a href="/">← Torna alla home</a>
+</div>
+
+</body>
+</html>

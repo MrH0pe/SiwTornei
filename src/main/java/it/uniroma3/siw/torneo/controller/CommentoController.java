@@ -29,7 +29,8 @@ public class CommentoController {
 	@GetMapping("/commenti/{id}/edit")
 	public String cambiaCommenti(@PathVariable("id") Long id, Model model, Principal principal) {
 		Commento commento = this.commentoService.findById(id);
-		
+		if (commento == null) return "redirect:/tornei"; //Commento inesistente: evita NullPointerException
+
 		// Controllo sicurezza
 		if (principal == null || !principal.getName().equals(commento.getCredentials().getUsername())) {
 			return "redirect:/partite/" + commento.getPartita().getId();
@@ -45,6 +46,7 @@ public class CommentoController {
 			Principal principal) {
 
 		Commento commento = this.commentoService.findById(id);
+		if (commento == null) return "redirect:/tornei"; //Commento inesistente: evita NullPointerException
 
 		// Controllo sicurezza
 		if (principal == null || !principal.getName().equals(commento.getCredentials().getUsername())) {
