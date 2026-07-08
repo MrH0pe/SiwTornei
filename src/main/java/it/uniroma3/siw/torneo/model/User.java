@@ -31,7 +31,7 @@ public class User {
 	@NotBlank
 	private String email;
 	
-	public User() {   //Costruttore NoArgs
+	public User() {   
 	}
 	
 	//Costruttore necessario per il MainController

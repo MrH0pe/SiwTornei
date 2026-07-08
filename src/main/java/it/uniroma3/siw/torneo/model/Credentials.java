@@ -11,9 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 
-
-
-
 @Entity
 public class Credentials {
 	

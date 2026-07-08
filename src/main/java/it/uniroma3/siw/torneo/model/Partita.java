@@ -21,7 +21,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"dataOra", "luogo"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"dataOra", "luogo"}))  //Chiavi
 public class Partita {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,10 +38,10 @@ public class Partita {
 	@Min(0) @Max(10)
 	private Integer goalsAway;
 	@NotNull
-	@Enumerated(EnumType.STRING) //Salva "SCHEDULED"/"PLAYED" invece dell'ordinale: robusto se l'enum cambia ordine
+	@Enumerated(EnumType.STRING) //Salva "SCHEDULED"/"PLAYED" 
 	private StatoPartita stato;
 
-	public Partita() { //Costruttore NoArgs
+	public Partita() { 
 	}
 
 	@ManyToOne

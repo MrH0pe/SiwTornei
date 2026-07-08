@@ -42,11 +42,6 @@ public class PartitaService {
 	}
 	
 	@Transactional(readOnly = true)
-	public List<Partita> findAllByTorneo(Torneo torneo){
-		return (List<Partita>) partitaRepository.findAllByTorneo(torneo);
-	}
-	
-	@Transactional(readOnly = true)
 	public boolean existsByLuogoAndDataOra(String luogo, LocalDateTime dataOra) {
 		return partitaRepository.existsByLuogoAndDataOra(luogo, dataOra);
 	}

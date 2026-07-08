@@ -18,7 +18,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"nome", "anno"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"nome", "anno"}))  //Chiavi
 public class Torneo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,7 +34,7 @@ public class Torneo {
 	@NotBlank
 	private String descrizione;
 
-	//Costruttore vuoto, richiesto da JPA
+	
 	public Torneo() {
 
 	}

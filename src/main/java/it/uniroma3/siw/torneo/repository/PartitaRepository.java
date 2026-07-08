@@ -12,11 +12,12 @@ import it.uniroma3.siw.torneo.model.Partita;
 import it.uniroma3.siw.torneo.model.Torneo;
 
 public interface PartitaRepository extends CrudRepository<Partita, Long>{
+	boolean existsByLuogoAndDataOra(String luogo, LocalDateTime dataOra);
+	
+	//NON UTILIZZATA
 	//Strategia 1 (default): i @ManyToOne di Partita sono EAGER -> Hibernate esegue
 	//query aggiuntive per torneo/squadre/arbitro di ogni partita (problema N+1)
 	List<Partita> findAllByTorneo(Torneo torneo);
-
-	boolean existsByLuogoAndDataOra(String luogo, LocalDateTime dataOra);
 
 	//Strategia 2: JOIN FETCH -> tutte le associazioni caricate in una sola query SQL
 	@Query("SELECT p FROM Partita p LEFT JOIN FETCH p.torneo LEFT JOIN FETCH p.squadraCasa "
@@ -26,7 +27,8 @@ public interface PartitaRepository extends CrudRepository<Partita, Long>{
 	@Query("SELECT p FROM Partita p LEFT JOIN FETCH p.torneo LEFT JOIN FETCH p.squadraCasa "
 			+ "LEFT JOIN FETCH p.squadraOspite LEFT JOIN FETCH p.arbitro WHERE p.torneo = :torneo")
 	List<Partita> findAllByTorneoWithRelazioni(@Param("torneo") Torneo torneo);
-
+	
+	//NON UTILIZZATA
 	//Strategia 3: EntityGraph -> equivalente dichiarativo del JOIN FETCH
 	@EntityGraph(attributePaths = {"torneo", "squadraCasa", "squadraOspite", "arbitro"})
 	@Query("SELECT p FROM Partita p WHERE p.torneo = :torneo")

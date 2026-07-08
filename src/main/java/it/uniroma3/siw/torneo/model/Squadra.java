@@ -30,7 +30,7 @@ public class Squadra {
 	@NotBlank
 	private String citta;
 
-	//Costruttore NoArgs richiesto da JPA
+	
 	public Squadra() {
 
 	}

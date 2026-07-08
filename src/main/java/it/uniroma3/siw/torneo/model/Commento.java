@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"partita_id", "credentials_id", "dataCreazione"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"partita_id", "credentials_id", "dataCreazione"}))  //Chiavi + FK
 public class Commento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
