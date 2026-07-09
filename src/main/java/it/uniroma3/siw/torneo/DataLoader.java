@@ -1,5 +1,6 @@
 package it.uniroma3.siw.torneo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,13 +13,11 @@ import it.uniroma3.siw.torneo.repository.CredentialsRepository;
 @Component
 public class DataLoader implements ApplicationRunner {
 
-    private final CredentialsRepository credentialsRepository;
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private CredentialsRepository credentialsRepository;
 
-    public DataLoader(CredentialsRepository credentialsRepository, PasswordEncoder passwordEncoder) {
-        this.credentialsRepository = credentialsRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public void run(ApplicationArguments args) {

@@ -2,6 +2,7 @@ package it.uniroma3.siw.torneo.controller;
 
 import java.security.Principal;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,17 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import it.uniroma3.siw.torneo.model.Commento;
 import it.uniroma3.siw.torneo.service.CommentoService;
-import it.uniroma3.siw.torneo.service.CredentialsService;
-import it.uniroma3.siw.torneo.service.PartitaService;
 
 @Controller
 public class CommentoController {
 	
+	@Autowired
 	private CommentoService commentoService;
-	
-	public CommentoController(CommentoService commentoService , PartitaService partitaService, CredentialsService credentialsService) {
-		this.commentoService = commentoService;
-	}
 	
 
 	

@@ -1,7 +1,6 @@
 package it.uniroma3.siw.torneo.model;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,9 +11,15 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"nome", "cognome", "data_di_nascita"}))  //Chiavi
+@Getter @Setter @NoArgsConstructor   //NoArgsConstructor richiesto da JPA
+@EqualsAndHashCode(of = {"nome", "cognome", "dataDiNascita"})
 public class Giocatore {
 
 	@Id
@@ -32,85 +37,7 @@ public class Giocatore {
 	@NotNull
 	private Integer altezza;
 
-	public Giocatore() {  //Costruttore noArgs richiesto da JPA
-	}
-
 	@ManyToOne
 	private Squadra squadra;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getCognome() {
-		return cognome;
-	}
-
-	public void setCognome(String cognome) {
-		this.cognome = cognome;
-	}
-
-	public LocalDate getDataDiNascita() {
-		return dataDiNascita;
-	}
-
-	public void setDataDiNascita(LocalDate dataDiNascita) {
-		this.dataDiNascita = dataDiNascita;
-	}
-
-	public String getRuolo() {
-		return ruolo;
-	}
-
-	public void setRuolo(String ruolo) {
-		this.ruolo = ruolo;
-	}
-
-	public Integer getAltezza() {
-		return altezza;
-	}
-
-	public void setAltezza(Integer altezza) {
-		this.altezza = altezza;
-	}
-
-	public Squadra getSquadra() {
-		return squadra;
-	}
-
-	public void setSquadra(Squadra squadra) {
-		this.squadra = squadra;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(cognome, dataDiNascita, nome);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Giocatore other = (Giocatore) obj;
-		return Objects.equals(cognome, other.cognome) && Objects.equals(dataDiNascita, other.dataDiNascita)
-				&& Objects.equals(nome, other.nome);
-	}
-
 
 }

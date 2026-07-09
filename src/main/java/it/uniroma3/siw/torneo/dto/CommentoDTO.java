@@ -2,6 +2,9 @@ package it.uniroma3.siw.torneo.dto;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /*
  * DTO (Data Transfer Object) per i commenti.
  *
@@ -13,6 +16,7 @@ import java.time.LocalDateTime;
  * bisogno di mostrare (id, testo, username, data), senza relazioni annidate.
  * È il JSON che il browser riceve quando fa fetch('/api/partite/{id}/commenti').
  */
+@Getter @AllArgsConstructor
 public class CommentoDTO {
 
     private Long id;
@@ -20,15 +24,4 @@ public class CommentoDTO {
     private String username;       // estratto da Credentials, non l'oggetto intero
     private LocalDateTime dataCreazione;
 
-    public CommentoDTO(Long id, String testo, String username, LocalDateTime dataCreazione) {
-        this.id = id;
-        this.testo = testo;
-        this.username = username;
-        this.dataCreazione = dataCreazione;
-    }
-
-    public Long getId() { return id; }
-    public String getTesto() { return testo; }
-    public String getUsername() { return username; }
-    public LocalDateTime getDataCreazione() { return dataCreazione; }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,17 +37,14 @@ import it.uniroma3.siw.torneo.service.PartitaService;
 @RequestMapping("/api")
 public class CommentoApiController {
 
-    private final CommentoService commentoService;
-    private final PartitaService partitaService;
-    private final CredentialsService credentialsService;
+    @Autowired
+    private CommentoService commentoService;
 
-    public CommentoApiController(CommentoService commentoService,
-                                 PartitaService partitaService,
-                                 CredentialsService credentialsService) {
-        this.commentoService = commentoService;
-        this.partitaService = partitaService;
-        this.credentialsService = credentialsService;
-    }
+    @Autowired
+    private PartitaService partitaService;
+
+    @Autowired
+    private CredentialsService credentialsService;
 
     /*
      * GET /api/partite/{id}/commenti

@@ -2,6 +2,7 @@ package it.uniroma3.siw.torneo;
 
 import java.util.function.LongSupplier;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
@@ -30,11 +31,8 @@ public class AnalisiPrestazioniRunner implements ApplicationRunner {
 	private static final int WARMUP = 10;
 	private static final int MISURE = 50;
 
-	private final AnalisiPrestazioniService analisi;
-
-	public AnalisiPrestazioniRunner(AnalisiPrestazioniService analisi) {
-		this.analisi = analisi;
-	}
+	@Autowired
+	private AnalisiPrestazioniService analisi;
 
 	@Override
 	public void run(ApplicationArguments args) {

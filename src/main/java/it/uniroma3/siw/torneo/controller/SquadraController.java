@@ -2,6 +2,7 @@ package it.uniroma3.siw.torneo.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,11 +13,8 @@ import it.uniroma3.siw.torneo.service.SquadraService;
 
 @Controller
 public class SquadraController {
+	@Autowired
 	private SquadraService squadraService;
-	
-	public SquadraController(SquadraService squadraService) {
-		this.squadraService = squadraService;
-	}
 	
 	@GetMapping("/squadre")
 	public String tutteSquadre(Model model){  //gli passo un Model

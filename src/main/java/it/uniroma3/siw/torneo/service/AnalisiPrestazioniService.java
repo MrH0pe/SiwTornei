@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,20 +34,17 @@ import it.uniroma3.siw.torneo.repository.TorneoRepository;
 @Service
 public class AnalisiPrestazioniService {
 
-	private final TorneoRepository torneoRepository;
-	private final SquadraRepository squadraRepository;
-	private final PartitaRepository partitaRepository;
-	private final ArbitroRepository arbitroRepository;
+	@Autowired
+	private TorneoRepository torneoRepository;
 
-	public AnalisiPrestazioniService(TorneoRepository torneoRepository,
-	                                 SquadraRepository squadraRepository,
-	                                 PartitaRepository partitaRepository,
-	                                 ArbitroRepository arbitroRepository) {
-		this.torneoRepository = torneoRepository;
-		this.squadraRepository = squadraRepository;
-		this.partitaRepository = partitaRepository;
-		this.arbitroRepository = arbitroRepository;
-	}
+	@Autowired
+	private SquadraRepository squadraRepository;
+
+	@Autowired
+	private PartitaRepository partitaRepository;
+
+	@Autowired
+	private ArbitroRepository arbitroRepository;
 
 	// ==================== CASO A: dettaglio torneo con squadre ====================
 

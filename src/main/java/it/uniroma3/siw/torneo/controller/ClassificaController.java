@@ -2,6 +2,7 @@ package it.uniroma3.siw.torneo.controller;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,13 +16,11 @@ import it.uniroma3.siw.torneo.service.TorneoService;
 @Controller
 public class ClassificaController {
 
-    private final ClassificaService classificaService;
-    private final TorneoService torneoService;
+    @Autowired
+    private ClassificaService classificaService;
 
-    public ClassificaController(ClassificaService classificaService, TorneoService torneoService) {
-        this.classificaService = classificaService;
-        this.torneoService = torneoService;
-    }
+    @Autowired
+    private TorneoService torneoService;
 
     @GetMapping("/tornei/{id}/classifica")
     public String classifica(@PathVariable("id") Long id, Model model) {

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +19,8 @@ import it.uniroma3.siw.torneo.model.Torneo;
 @Service
 public class ClassificaService {
 
+	@Autowired
 	private PartitaService partitaService;
-	
-	public ClassificaService( PartitaService partitaService) {
-		this.partitaService = partitaService;
-	}
 	
 	//Sola lettura: readOnly=true evita il dirty checking di Hibernate e segnala al driver che non ci saranno scritture
 	@Transactional(readOnly = true)

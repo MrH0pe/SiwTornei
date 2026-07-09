@@ -1,5 +1,6 @@
 package it.uniroma3.siw.torneo.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,13 +11,11 @@ import it.uniroma3.siw.torneo.repository.CredentialsRepository;
 @Service
 public class CredentialsService {
 	
+	@Autowired
 	private CredentialsRepository credentialsRepository;
+
+	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
-	public CredentialsService(CredentialsRepository credentialsRepository, PasswordEncoder passwordEncoder) {
-		this.credentialsRepository = credentialsRepository;
-		this.passwordEncoder = passwordEncoder;
-	}
 	
 	@Transactional
 	public void save(Credentials credentials) {

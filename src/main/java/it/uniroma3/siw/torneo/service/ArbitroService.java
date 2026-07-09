@@ -2,6 +2,7 @@ package it.uniroma3.siw.torneo.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,11 +12,8 @@ import it.uniroma3.siw.torneo.repository.ArbitroRepository;
 @Service
 public class ArbitroService {
 	
+	@Autowired
 	private ArbitroRepository arbitroRepository;
-	
-	public ArbitroService(ArbitroRepository arbitroRepository) {
-		this.arbitroRepository = arbitroRepository;
-	}
 	
 	@Transactional(readOnly = true)
 	public List<Arbitro> findAll(){

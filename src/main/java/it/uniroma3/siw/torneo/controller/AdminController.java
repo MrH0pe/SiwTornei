@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,8 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import jakarta.validation.Valid;
 
 import it.uniroma3.siw.torneo.model.Arbitro;
 import it.uniroma3.siw.torneo.model.Giocatore;
@@ -33,6 +32,7 @@ import it.uniroma3.siw.torneo.service.GiocatoreService;
 import it.uniroma3.siw.torneo.service.PartitaService;
 import it.uniroma3.siw.torneo.service.SquadraService;
 import it.uniroma3.siw.torneo.service.TorneoService;
+import jakarta.validation.Valid;
 
 /*
 I metodi HTTP più comuni sono GET e POST. 
@@ -47,20 +47,20 @@ POST: di norma, è usato per inviare informazioni al server (ad esempio, i dati
 @Controller
 public class AdminController {
 
+	@Autowired
 	private SquadraService squadraService;
-	private TorneoService torneoService;
-	private GiocatoreService giocatoreService;
-	private ArbitroService arbitroService;
-	public PartitaService partitaService;
 
-	public AdminController(SquadraService squadraService, TorneoService torneoService,
-			GiocatoreService giocatoreService, ArbitroService arbitroService, PartitaService partitaService) {
-		this.squadraService = squadraService;
-		this.torneoService = torneoService;
-		this.giocatoreService = giocatoreService;
-		this.arbitroService = arbitroService;
-		this.partitaService = partitaService;
-	}
+	@Autowired
+	private TorneoService torneoService;
+
+	@Autowired
+	private GiocatoreService giocatoreService;
+
+	@Autowired
+	private ArbitroService arbitroService;
+
+	@Autowired
+	private PartitaService partitaService;
 
 	// ==================== SQUADRE ====================
 

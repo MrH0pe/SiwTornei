@@ -2,6 +2,7 @@ package it.uniroma3.siw.torneo.security;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -30,11 +31,8 @@ qualsiasi altro    → authenticated()   ← qualsiasi utente loggato
 @EnableWebSecurity
 public class SecurityConfiguration {
 	
-    private final DataSource dataSource;
-    
-    public SecurityConfiguration(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+    @Autowired
+    private DataSource dataSource;
     // Dove sono le credenziali nel DB e come leggerle
     @Bean  //esegui questo metodo all'avvio, prendi l'oggetto che restituisce, e mettilo nel tuo contenitore
     public UserDetailsService userDetailsService() {

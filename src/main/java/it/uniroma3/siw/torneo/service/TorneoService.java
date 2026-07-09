@@ -2,6 +2,7 @@ package it.uniroma3.siw.torneo.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,13 +13,11 @@ import it.uniroma3.siw.torneo.repository.TorneoRepository;
 
 @Service
 public class TorneoService {
+	@Autowired
 	private TorneoRepository torneoRepository;
-	private SquadraRepository squadraRepository;
 
-	public TorneoService(TorneoRepository torneoRepository, SquadraRepository squadraRepository) {
-		this.torneoRepository = torneoRepository;
-		this.squadraRepository = squadraRepository;
-	}
+	@Autowired
+	private SquadraRepository squadraRepository;
 
 	@Transactional(readOnly = true)
 	public List<Torneo> getAllTornei(){

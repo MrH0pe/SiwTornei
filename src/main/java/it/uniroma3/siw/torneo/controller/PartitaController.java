@@ -2,6 +2,7 @@ package it.uniroma3.siw.torneo.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,13 +16,11 @@ import it.uniroma3.siw.torneo.service.PartitaService;
 @Controller
 public class PartitaController {
 	
+	@Autowired
 	private PartitaService partitaService;
+
+	@Autowired
 	private CommentoService commentoService;
-	
-	public PartitaController(PartitaService partitaService, CommentoService commentoService) {
-		this.partitaService = partitaService;
-		this.commentoService = commentoService;
-	}
 	
 	@GetMapping("/partite/{id}")
 	public String infoPartita(@PathVariable("id") Long id, Model model) {
