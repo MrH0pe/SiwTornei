@@ -13,7 +13,7 @@
     <div class="nav-links">
         <a href="/tornei">Tornei</a>
         <a href="/squadre">Squadre</a>
-        <a th:if="${userDetails != null and #strings.contains(userDetails.authorities.toString(), 'ROLE_ADMIN')}"
+        <a th:if="${isAdmin}"
            href="/admin/tornei" style="color:#7a4010; font-weight:700;">⚙ Admin</a>
     </div>
     <div class="nav-auth">

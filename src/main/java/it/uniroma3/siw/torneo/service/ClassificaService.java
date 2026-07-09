@@ -26,11 +26,13 @@ public class ClassificaService {
 	@Transactional(readOnly = true)
 	public Map<Squadra, Integer> classificaTorneo(Torneo torneo) {
 	    Map<Squadra, Integer> classifica = new HashMap<>();
+	    Map<Squadra, Integer> differenzaReti = new HashMap<>(); //criterio di spareggio a parità di punti
 
 	    List<Squadra> squadreTorneo = torneo.getSquadre();
-	    
+
 	    for (Squadra squadra : squadreTorneo) {
 	        classifica.put(squadra, 0);
+	        differenzaReti.put(squadra, 0);
 	    }
 
 	    //JOIN FETCH: squadre e associazioni caricate in un'unica query invece di N+1
@@ -41,6 +43,8 @@ public class ClassificaService {
 	            Squadra ospite = partita.getSquadraOspite();
 	            classifica.putIfAbsent(casa, 0);
 	            classifica.putIfAbsent(ospite, 0);
+	            differenzaReti.putIfAbsent(casa, 0);
+	            differenzaReti.putIfAbsent(ospite, 0);
 	            int gCasa = partita.getGoalsHome();
 	            int gOspite = partita.getGoalsAway();
 
@@ -52,10 +56,14 @@ public class ClassificaService {
 	                classifica.put(casa, classifica.get(casa) + 1);
 	                classifica.put(ospite, classifica.get(ospite) + 1);
 	            }
+	            differenzaReti.put(casa, differenzaReti.get(casa) + gCasa - gOspite);
+	            differenzaReti.put(ospite, differenzaReti.get(ospite) + gOspite - gCasa);
 	        }
 	    }
+	    //Ordinamento: punti decrescenti, a parità di punti differenza reti decrescente
 	    return classifica.entrySet().stream()
-	        .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+	        .sorted(Map.Entry.<Squadra, Integer>comparingByValue(Comparator.reverseOrder())
+	            .thenComparing(entry -> differenzaReti.get(entry.getKey()), Comparator.reverseOrder()))
 	        .collect(Collectors.toMap(
 	            Map.Entry::getKey,
 	            Map.Entry::getValue,

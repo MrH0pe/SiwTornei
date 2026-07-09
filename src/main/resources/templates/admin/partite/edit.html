@@ -23,6 +23,8 @@
 <div class="container">
     <h1>Modifica partita</h1>
 
+    <div th:if="${erroreForm}" class="alert alert-danger" th:text="${erroreForm}"></div>
+
     <form th:action="@{/admin/partite/{id}/edit(id=${partita.id})}" method="post">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 

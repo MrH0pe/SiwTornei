@@ -434,14 +434,26 @@ public class AdminController {
 	                           @RequestParam Long squadraCasaId,
 	                           @RequestParam Long squadraOspiteId,
 	                           @RequestParam Long arbitroId,
-	                           @RequestParam StatoPartita stato) {
+	                           @RequestParam StatoPartita stato,
+	                           Model model) {
 		Partita partita = partitaService.findById(id);
 		if (partita == null) return "redirect:/admin/partite";
+		LocalDateTime nuovaDataOra;
 		try {
-			partita.setDataOra(LocalDateTime.parse(dataOra));
+			nuovaDataOra = LocalDateTime.parse(dataOra);
 		} catch (DateTimeParseException e) {
-			return "redirect:/admin/partite/" + id + "/edit";
+			return erroreFormPartitaEdit(model, partita, "Data e ora non valide.");
 		}
+		//Stessi controlli della creazione
+		if (squadraCasaId.equals(squadraOspiteId)) {
+			return erroreFormPartitaEdit(model, partita, "La squadra di casa e quella ospite devono essere diverse.");
+		}
+		//Il duplicato va verificato solo se luogo o dataOra cambiano (sennò la partita "trova" se stessa)
+		boolean luogoODataCambiati = !luogo.equals(partita.getLuogo()) || !nuovaDataOra.equals(partita.getDataOra());
+		if (luogoODataCambiati && partitaService.existsByLuogoAndDataOra(luogo, nuovaDataOra)) {
+			return erroreFormPartitaEdit(model, partita, "Esiste già una partita in quel luogo a quell'orario.");
+		}
+		partita.setDataOra(nuovaDataOra);
 		partita.setLuogo(luogo);
 		partita.setTorneo(torneoService.findById(torneoId));
 		partita.setSquadraCasa(squadraService.findById(squadraCasaId));
@@ -450,6 +462,16 @@ public class AdminController {
 		partita.setStato(stato);
 		partitaService.save(partita);
 		return "redirect:/admin/partite";
+	}
+
+	//Ripopola il form di modifica partita mostrando un messaggio di errore
+	private String erroreFormPartitaEdit(Model model, Partita partita, String messaggio) {
+		model.addAttribute("erroreForm", messaggio);
+		model.addAttribute("partita", partita);
+		model.addAttribute("listaTornei", torneoService.getAllTornei());
+		model.addAttribute("listaSquadre", squadraService.findAll());
+		model.addAttribute("listaArbitri", arbitroService.findAll());
+		return "admin/partite/edit";
 	}
 
 	@PostMapping("/admin/partite/{id}/delete")

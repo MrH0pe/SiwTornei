@@ -54,7 +54,7 @@ public class CommentoController {
 			return "redirect:/commenti/" + id + "/edit";
 		}
 
-		commento.setTesto(testo);
+		commento.setTesto(testo.trim());
 		this.commentoService.save(commento);
 
 		return "redirect:/partite/" + commento.getPartita().getId();

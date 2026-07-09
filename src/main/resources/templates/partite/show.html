@@ -12,7 +12,7 @@
     <div class="nav-links">
         <a href="/tornei">Tornei</a>
         <a href="/squadre">Squadre</a>
-        <a th:if="${userDetails != null and #strings.contains(userDetails.authorities.toString(), 'ROLE_ADMIN')}"
+        <a th:if="${isAdmin}"
            href="/admin/tornei" style="color:#7a4010; font-weight:700;">⚙ Admin</a>
     </div>
     <div class="nav-auth">
@@ -77,23 +77,24 @@
     <div id="commenti-root"
          th:data-partita-id="${partita.id}"
          th:data-username="${userDetails != null ? userDetails.username : ''}"
-         th:data-is-admin="${userDetails != null and #strings.contains(userDetails.authorities.toString(), 'ROLE_ADMIN')}"
+         th:data-is-admin="${isAdmin}"
          th:data-logged-in="${userDetails != null}"
          th:data-csrf-token="${_csrf.token}"
          th:data-csrf-header="${_csrf.headerName}">
     </div>
 
     <!--
-        Librerie React caricate via CDN (nessun npm/webpack necessario).
-        - react.development.js  → il motore React (componenti, stato, hook)
-        - react-dom.development.js → la parte che collega React al DOM del browser
+        Librerie React servite in locale da static/js (nessun npm/webpack necessario,
+        e la pagina funziona anche senza connessione internet).
+        - react.production.min.js  → il motore React (componenti, stato, hook)
+        - react-dom.production.min.js → la parte che collega React al DOM del browser
         - commenti.js (defer)   → il nostro componente; "defer" garantisce che venga
           eseguito solo dopo che react e react-dom sono già stati caricati e la
           pagina è completamente analizzata dal browser.
     -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-    <script src="/js/commenti.js" defer></script>
+    <script th:src="@{/js/react.production.min.js}"></script>
+    <script th:src="@{/js/react-dom.production.min.js}"></script>
+    <script th:src="@{/js/commenti.js}" defer></script>
 
     <div class="back-links">
         <a th:href="@{'/tornei/' + ${partita.torneo.id}}">← Torna al torneo</a>

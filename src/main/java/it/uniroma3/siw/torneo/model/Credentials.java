@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,6 +35,7 @@ public class Credentials {
 
 	private String role;
 
+	@Valid   //Propaga la validazione ai campi di User (nome, cognome, email) nel form di registrazione
 	@OneToOne(cascade = CascadeType.ALL)   //Lato proprietario, ha la FK user_id
 	private User user;
 

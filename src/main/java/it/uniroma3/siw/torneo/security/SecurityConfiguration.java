@@ -21,8 +21,7 @@ import it.uniroma3.siw.torneo.model.Credentials;
 GET /              → permitAll()       ← tutti, anche anonimi
 GET /login         → permitAll()       ← serve per mostrare il form!
 POST /login        → permitAll()       ← serve per inviare le credenziali!
-GET /admin/**      → solo ADMIN        ← percorso protetto
-POST /admin/**     → solo ADMIN
+/admin/** (qualsiasi metodo) → solo ADMIN   ← percorso protetto
 qualsiasi altro    → authenticated()   ← qualsiasi utente loggato
 */
 
@@ -69,9 +68,7 @@ public class SecurityConfiguration {
                 .authenticated();
             authorize.requestMatchers(HttpMethod.POST,
                 "/register", "/login").permitAll();
-            authorize.requestMatchers(HttpMethod.GET, "/admin/**")
-                .hasAnyAuthority(Credentials.ADMIN_ROLE);
-            authorize.requestMatchers(HttpMethod.POST, "/admin/**")
+            authorize.requestMatchers("/admin/**")   //qualsiasi metodo HTTP
                 .hasAnyAuthority(Credentials.ADMIN_ROLE);
             authorize.anyRequest().authenticated();
         });
