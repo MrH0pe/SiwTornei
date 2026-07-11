@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>404 — Pagina non trovata</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand"><a href="/">⚽ SiwTorneo</a></div>
+    <div class="nav-links"><a href="/tornei">Tornei</a><a href="/squadre">Squadre</a></div>
+</nav>
+
+<div class="container">
+    <div class="error-box">
+        <div class="error-code">404</div>
+        <h1>Pagina non trovata</h1>
+
+        <!-- messaggio personalizzato lanciato dal controller (ResourceNotFoundException),
+             altrimenti testo generico per URL sbagliati -->
+        <p th:text="${messaggio} ?: 'La pagina che stai cercando non esiste o è stata rimossa.'">
+            La pagina che stai cercando non esiste o è stata rimossa.
+        </p>
+
+        <span class="error-path" th:if="${path != null}" th:text="${path}">/percorso/inesistente</span>
+
+        <div class="error-actions">
+            <a href="/" class="btn btn-primary">🏠 Torna alla home</a>
+            <a href="/tornei" class="btn btn-success">Vedi i Tornei</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

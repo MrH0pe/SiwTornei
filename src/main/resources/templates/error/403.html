@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>403 — Accesso negato</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand"><a href="/">⚽ SiwTorneo</a></div>
+    <div class="nav-links"><a href="/tornei">Tornei</a><a href="/squadre">Squadre</a></div>
+</nav>
+
+<div class="container">
+    <div class="error-box">
+        <div class="error-code">403</div>
+        <h1>Accesso negato</h1>
+
+        <p>Non hai i permessi necessari per accedere a questa risorsa.
+           Se pensi sia un errore, effettua il login con un account autorizzato.</p>
+
+        <div class="error-actions">
+            <a href="/" class="btn btn-primary">🏠 Torna alla home</a>
+            <a href="/login" class="btn btn-info">Login</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

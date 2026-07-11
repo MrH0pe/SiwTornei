@@ -340,6 +340,43 @@ textarea { resize: vertical; min-height: 90px; }
 .back-links { margin-top: 28px; display: flex; gap: 16px; flex-wrap: wrap; }
 .back-links a { font-size: 0.93rem; }
 
+/* ---- Error pages (404 / 403 / 500) ---- */
+.error-box {
+    background: #fff;
+    border-radius: 14px;
+    padding: 52px 36px;
+    text-align: center;
+    box-shadow: 0 4px 18px rgba(120,90,180,0.10);
+}
+.error-code {
+    font-size: 5.5rem;
+    font-weight: 800;
+    line-height: 1;
+    color: #c8b8e8;
+    letter-spacing: 0.02em;
+    margin-bottom: 10px;
+}
+.error-box h1 { margin-bottom: 12px; }
+.error-box p  { color: #5a5a5a; max-width: 520px; margin: 0 auto 16px; }
+.error-path {
+    display: inline-block;
+    background: #f0ecff;
+    border-radius: 6px;
+    padding: 3px 12px;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: #6b4fa0;
+    margin-bottom: 20px;
+    word-break: break-all;
+}
+.error-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
 /* ---- Utility ---- */
 .mt-16 { margin-top: 16px; }
 .mb-0  { margin-bottom: 0 !important; }

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import it.uniroma3.siw.torneo.exception.ResourceNotFoundException;
 import it.uniroma3.siw.torneo.model.Squadra;
 import it.uniroma3.siw.torneo.service.SquadraService;
 
@@ -30,7 +31,7 @@ public class SquadraController {
 	public String dettaglioSquadra(@PathVariable("id") Long id, Model model) {
 	    Squadra squadra = this.squadraService.findByIdWithGiocatori(id);
 	    if (squadra == null) {
-	        return "redirect:/squadre";
+	        throw new ResourceNotFoundException("La squadra con id " + id + " non esiste o è stata eliminata.");
 	    }
 	    model.addAttribute("squadra", squadra);
 	    return "squadre/show";

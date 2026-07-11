@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import it.uniroma3.siw.torneo.exception.ResourceNotFoundException;
 import it.uniroma3.siw.torneo.model.Commento;
 import it.uniroma3.siw.torneo.model.Partita;
 import it.uniroma3.siw.torneo.service.CommentoService;
@@ -26,7 +27,7 @@ public class PartitaController {
 	public String infoPartita(@PathVariable("id") Long id, Model model) {
 	    Partita singolaPartita = this.partitaService.findById(id);
 	    if (singolaPartita == null) {
-	        return "redirect:/tornei";
+	        throw new ResourceNotFoundException("La partita con id " + id + " non esiste o è stata eliminata.");
 	    }
 	    List<Commento> commentiPartita = this.commentoService.findAllByPartita(singolaPartita);
 	    model.addAttribute("partita", singolaPartita);

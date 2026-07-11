@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import it.uniroma3.siw.torneo.exception.ResourceNotFoundException;
 import it.uniroma3.siw.torneo.model.Partita;
 import it.uniroma3.siw.torneo.model.Torneo;
 import it.uniroma3.siw.torneo.service.PartitaService;
@@ -35,7 +36,7 @@ public class TorneoController {
 	public String dettaglioTorneo(@PathVariable("id") Long id, Model model) {
 	    Torneo torneo = this.torneoService.findByIdWithSquadre(id);
 	    if (torneo == null) {
-	        return "redirect:/tornei";
+	        throw new ResourceNotFoundException("Il torneo con id " + id + " non esiste o è stato eliminato.");
 	    }
 	    //JOIN FETCH per evitare il problema N+1 sulle associazioni di ogni partita
 	    List<Partita> partite = this.partitaService.findAllByTorneoWithRelazioni(torneo);

@@ -22,20 +22,18 @@ public class ClassificaService {
 	@Autowired
 	private PartitaService partitaService;
 	
-	//Sola lettura: readOnly=true evita il dirty checking di Hibernate e segnala al driver che non ci saranno scritture
+	//Sola lettura
 	@Transactional(readOnly = true)
 	public Map<Squadra, Integer> classificaTorneo(Torneo torneo) {
 	    Map<Squadra, Integer> classifica = new HashMap<>();
 	    Map<Squadra, Integer> differenzaReti = new HashMap<>(); //criterio di spareggio a parità di punti
 
-	    List<Squadra> squadreTorneo = torneo.getSquadre();
-
+	    List<Squadra> squadreTorneo = torneo.getSquadre();  //Mette in questa List tutte le squadre del torneo
 	    for (Squadra squadra : squadreTorneo) {
-	        classifica.put(squadra, 0);
-	        differenzaReti.put(squadra, 0);
+	        classifica.put(squadra, 0);                    //Inizializza la classifica con 0 punti per ogni squadra
+	        differenzaReti.put(squadra, 0);				  //Inizializza la differenza di reti con 0 per ogni squadra
 	    }
 
-	    //JOIN FETCH: squadre e associazioni caricate in un'unica query invece di N+1
 	    List<Partita> partite = partitaService.findAllByTorneoWithRelazioni(torneo);
 	    for (Partita partita : partite) {
 	        if (partita.getStato() == StatoPartita.PLAYED) {

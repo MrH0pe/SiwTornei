@@ -31,6 +31,7 @@ public class Commento {
 	@NotNull
 	private LocalDateTime dataCreazione;
 
+	//Commento collega una partita e le credentials dell'utente che lo ha scritto. Quindi ci sono due FK: partita_id e credentials_id
 	@ManyToOne
 	private Partita partita;
 

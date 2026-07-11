@@ -36,7 +36,7 @@ public class Credentials {
 	private String role;
 
 	@Valid   //Propaga la validazione ai campi di User (nome, cognome, email) nel form di registrazione
-	@OneToOne(cascade = CascadeType.ALL)   //Lato proprietario, ha la FK user_id
+	@OneToOne(cascade = CascadeType.ALL)   //Lato proprietario, ha la FK user_id, salvando le credenziali salvi anche lo user
 	private User user;
 
 	//Costruttore necessario per MainController

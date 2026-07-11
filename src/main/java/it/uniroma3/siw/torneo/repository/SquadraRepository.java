@@ -11,7 +11,7 @@ import it.uniroma3.siw.torneo.model.Squadra;
 public interface SquadraRepository extends CrudRepository<Squadra, Long>{
 	boolean existsByNomeAndCitta(String nome,String citta);
 	
-	//JDBC
+	//JOIN FETCH
 	@Query("SELECT s FROM Squadra s LEFT JOIN FETCH s.giocatori WHERE s.id = :id")
 	Optional<Squadra> findByIdWithGiocatori(@Param("id") Long id);
 	
